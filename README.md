@@ -78,3 +78,7 @@ git clone --recurse-submodules <репозиторий>
 5.  [В.А.Серебряков, М.П.Галочкин «Основы конструирования компиляторов»](http://citforum.ru/programming/theory/serebryakov/)
 6.  [Книга “Языки и трансляции” Б. К. Мартыненко](http://www.math.spbu.ru/user/mbk/ЯЗЫКИ_И_ТРАНСЛЯЦИИ(изд.2)/Reference.htm)
 
+
+
+git config --global user.name "Eselkopf"
+git config --global user.email "moonlight00.00@mail.ru"
