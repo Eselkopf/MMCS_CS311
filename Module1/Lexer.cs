@@ -67,14 +67,18 @@ namespace Lexer
 
         public override bool Parse()
         {
+			int res = 0;
+			bool sign = true;
             NextCh();
             if (currentCh == '+' || currentCh == '-')
             {
-                NextCh();
+				sign = currentCh == '+';
+				NextCh();
             }
         
             if (char.IsDigit(currentCh))
             {
+				res = res * 10 + (int)currentCh - (int)'0';
                 NextCh();
             }
             else
@@ -84,7 +88,8 @@ namespace Lexer
 
             while (char.IsDigit(currentCh))
             {
-                NextCh();
+				res = res * 10 + (int)currentCh - (int)'0';
+				NextCh();
             }
 
 
@@ -93,7 +98,12 @@ namespace Lexer
                 Error();
             }
 
-            return true;
+			if (!sign) res *= -1;
+
+			parseResult = res;
+
+
+			return true;
 
         }
     }
@@ -240,8 +250,68 @@ namespace Lexer
 
         public override bool Parse()
         {
-            throw new NotImplementedException();
-        }
+
+			double res = 0;
+			bool sign = true;
+			int digitsAfterPoint = 0;
+			NextCh();
+
+			if (currentCharValue == -1)
+				Error();
+			else if (!(char.IsDigit(currentCh) || currentCh == '+' || currentCh == '-'))
+				Error();
+
+			if (currentCh == '+' || currentCh == '-')
+			{
+				sign = currentCh == '+';
+				NextCh();
+			}
+			
+			
+
+			while (char.IsDigit(currentCh))
+			{
+				res = res * 10 + (int)currentCh - (int)'0';
+				NextCh();
+			}
+
+
+			if (currentCharValue == -1)
+			{
+				if (!sign) res *= -1;
+				parseResult = res;
+				return true;
+			}
+			else if (currentCh != '.')
+			{
+				Error();
+			}
+			
+			NextCh();
+			digitsAfterPoint++;
+
+			if (currentCharValue == -1)
+				Error();
+
+			while (char.IsDigit(currentCh))
+			{
+				res += ((int)currentCh - (int)'0') / Math.Pow(10, digitsAfterPoint++);
+				NextCh();
+			}
+
+			if (currentCharValue != -1)
+			{
+				Error();
+			}
+
+			if (!sign) res *= -1;
+
+			parseResult = res;
+			
+
+			return true;
+
+		}
        
     }
 
