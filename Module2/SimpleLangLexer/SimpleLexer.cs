@@ -100,7 +100,13 @@ namespace SimpleLexer
             keywordsMap["begin"] = Tok.BEGIN;
             keywordsMap["end"] = Tok.END;
             keywordsMap["cycle"] = Tok.CYCLE;
-        }
+			keywordsMap["div"] = Tok.DIV;
+			keywordsMap["mod"] = Tok.MOD;
+			keywordsMap["and"] = Tok.AND;
+			keywordsMap["or"] = Tok.OR;
+			keywordsMap["not"] = Tok.NOT;
+
+		}
 
         public string FinishCurrentLine()
         {
@@ -184,6 +190,32 @@ namespace SimpleLexer
 				else
 				{
 					LexKind = Tok.PLUS;
+				}
+			}
+			else if (currentCh == '-')
+			{
+				NextCh();
+				if (currentCh == '=')
+				{
+					NextCh();
+					LexKind = Tok.MINUSASSIGN;
+				}
+				else
+				{
+					LexKind = Tok.MINUS;
+				}
+			}
+			else if (currentCh == '*')
+			{
+				NextCh();
+				if (currentCh == '=')
+				{
+					NextCh();
+					LexKind = Tok.MULTASSIGN;
+				}
+				else
+				{
+					LexKind = Tok.MULT;
 				}
 			}
 			else if (currentCh == '=')
