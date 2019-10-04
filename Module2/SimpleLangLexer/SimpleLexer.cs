@@ -157,6 +157,7 @@ namespace SimpleLexer
 
         public void NextLexem()
         {
+			NextLexem:
             PassSpaces();
             // R К этому моменту первый символ лексемы считан в ch
             LexText = "";
@@ -169,15 +170,24 @@ namespace SimpleLexer
 				NextCh();
 				LexKind = Tok.SEMICOLON;
 			}
+			else if (currentCh == ',')
+			{
+				NextCh();
+				LexKind = Tok.COMMA;
+			}
 			else if (currentCh == ':')
 			{
 				NextCh();
-				if (currentCh != '=')
+				if (currentCh == '=')
 				{
-					LexError("= was expected");
+					NextCh();
+					LexKind = Tok.ASSIGN;
 				}
-				NextCh();
-				LexKind = Tok.ASSIGN;
+				else
+				{
+					LexKind = Tok.COLON;
+				}
+				
 			}
 			else if (currentCh == '+')
 			{
@@ -217,6 +227,38 @@ namespace SimpleLexer
 				{
 					LexKind = Tok.MULT;
 				}
+			}
+			else if (currentCh == '/')
+			{
+				NextCh();
+				if (currentCh == '/')
+				{
+					do
+						NextCh();
+					while ((currentCh != '\n') && (currentCh != '\0'));
+					NextCh();
+					goto NextLexem;
+				}
+				else if (currentCh == '=')
+				{
+					NextCh();
+					LexKind = Tok.DIVASSIGN;
+				}
+				else
+				{
+					LexKind = Tok.DIVISION;
+				}
+			}
+			else if (currentCh == '{')
+			{
+				NextCh();
+				do
+					NextCh();
+				while ((currentCh != '}') && (currentCh != '\0'));
+				if (currentCh != '}')
+					throw new LexerException("missing \'}\'");
+				NextCh();
+				goto NextLexem;
 			}
 			else if (currentCh == '=')
 			{
