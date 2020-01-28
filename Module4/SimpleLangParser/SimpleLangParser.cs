@@ -52,11 +52,43 @@ namespace SimpleLangParser
             Expr();
         }
 
+
+        public void For()
+        {
+            if (l.LexKind != Tok.FOR)
+            {
+                SyntaxError("for expected");
+            }
+            l.NextLexem();
+            Assign();
+            if (l.LexKind != Tok.TO)
+            {
+                SyntaxError("to expected");
+            }
+            l.NextLexem();
+            Expr();
+            if (l.LexKind != Tok.DO)
+            {
+                SyntaxError("do expected");
+            }
+            l.NextLexem();
+            if (l.LexKind == Tok.BEGIN)
+            {
+                Block();
+            }
+            else
+            {
+                Statement();
+            }
+
+        }
+
         public void StatementList() 
         {
             Statement();
             while (l.LexKind == Tok.SEMICOLON)
             {
+
                 l.NextLexem();
                 Statement();
             }
@@ -79,6 +111,11 @@ namespace SimpleLangParser
                 case Tok.ID:
                     {
                         Assign();
+                        break;
+                    }
+                case Tok.FOR:
+                    {
+                        For();
                         break;
                     }
                 default:
